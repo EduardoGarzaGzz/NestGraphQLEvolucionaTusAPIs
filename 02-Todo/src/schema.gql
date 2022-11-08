@@ -1,0 +1,12 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Query {
+  """Hola mundo mensaje"""
+  hola: String!
+  randomNumber: Float!
+
+  """From zero t argument to (default 6)"""
+  randomNumberZeroTo(to: Int): Int!
+}
