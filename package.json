@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "class-validator": "^0.13.2",
+    "class-transformer": "^0.5.1"
+  }
+}
