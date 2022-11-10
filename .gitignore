@@ -175,7 +175,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+03-Anylist/.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
@@ -1549,4 +1549,4 @@ abstract.record*
 ### GPG template
 secring.*
 
-
+03-Anylist/.env
