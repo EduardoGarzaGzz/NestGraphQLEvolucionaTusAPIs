@@ -5,7 +5,9 @@ import { GraphQLModule }                             from '@nestjs/graphql'
 import { TypeOrmModule }                             from '@nestjs/typeorm'
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
 import { join }                                      from 'path'
+import { AuthModule }                                from './auth/auth.module'
 import { ItemsModule }                               from './items/items.module'
+import { UsersModule }                               from './users/users.module'
 
 @Module( {
 	imports    : [
@@ -26,9 +28,12 @@ import { ItemsModule }                               from './items/items.module'
 			password        : process.env.DB_PASSWORD,
 			database        : process.env.DB_NAME,
 			synchronize     : true,
-			autoLoadEntities: true
+			autoLoadEntities: true,
+			logging         : 'all'
 		} ),
-		ItemsModule
+		ItemsModule,
+		UsersModule,
+		AuthModule
 	],
 	controllers: [],
 	providers  : []
