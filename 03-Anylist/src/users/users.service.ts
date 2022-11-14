@@ -3,6 +3,8 @@ import { InjectRepository }                                                     
 import * as bcrypt                                                               from 'bcrypt'
 import { Repository }                                                            from 'typeorm'
 import { SignupInput }                                                           from '../auth/dto/inputs/signup.input'
+import { ValidRoles }                                                            from '../auth/enums/valid-roles.enum'
+import { UpdateUserInput }                                                       from './dto/inputs/update-user.input'
 import { User }                                                                  from './entities/user.entity'
 
 @Injectable()
@@ -26,13 +28,21 @@ export class UsersService {
 		}
 	}
 
-	public async findAll(): Promise<User[]> {
-		return []
+	public async findAll( roles: ValidRoles[] ): Promise<User[]> {
+		if ( roles.length === 0 ) {
+			return await this.userRepository.find()
+		}
+
+		return await this.userRepository.createQueryBuilder()
+			.andWhere( 'ARRAY[roles] && ARRAY[:...roles]' )
+			.setParameter( 'roles', roles )
+			.getMany()
 	}
 
 	public async findOne( id: string ): Promise<User> {
 		try {
-			return this.userRepository.findOneByOrFail( { id } )
+			return this.userRepository
+				.findOneByOrFail( { id } )
 		} catch ( error ) {
 			this.handleDBErrors( error )
 		}
@@ -54,8 +64,21 @@ export class UsersService {
 		}
 	}
 
-	public block( id: string ): User {
-		throw new Error( `Not implemented` )
+	public async update( id: string, updateUserInput: UpdateUserInput, currentUser: User ): Promise<User> {
+		try {
+			const user        = await this.userRepository.preload( { ...updateUserInput } )
+			user.lastUpdateBy = currentUser
+			return this.userRepository.save( user )
+		} catch ( e ) {
+			this.handleDBErrors( e )
+		}
+	}
+
+	public async block( id: string, currentUser: User ): Promise<User> {
+		const userToBlock        = await this.findOneById( id )
+		userToBlock.isActive     = false
+		userToBlock.lastUpdateBy = currentUser
+		return await this.userRepository.save( userToBlock )
 	}
 
 	private handleDBErrors( error: any ): never {
