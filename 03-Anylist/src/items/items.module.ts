@@ -13,6 +13,9 @@ import { ItemsService }  from './items.service'
 		TypeOrmModule.forFeature( [
 			Item
 		] )
+	],
+	exports  : [
+		ItemsService
 	]
 } )
 export class ItemsModule {}

@@ -32,14 +32,6 @@ import { UsersModule }                               from './users/users.module'
 				}
 			} )
 		} ),
-//		GraphQLModule.forRoot<ApolloDriverConfig>( {
-//			driver        : ApolloDriver,
-//			autoSchemaFile: join( process.cwd(), 'src/schema.gql' ),
-//			playground    : false,
-//			plugins       : [
-//				ApolloServerPluginLandingPageLocalDefault
-//			]
-//		} ),
 		TypeOrmModule.forRoot( {
 			type            : 'postgres',
 			host            : process.env.DB_HOST,
@@ -48,7 +40,8 @@ import { UsersModule }                               from './users/users.module'
 			password        : process.env.DB_PASSWORD,
 			database        : process.env.DB_NAME,
 			synchronize     : true,
-			autoLoadEntities: true
+			autoLoadEntities: true,
+			logging         : 'all'
 		} ),
 		ItemsModule,
 		UsersModule,
