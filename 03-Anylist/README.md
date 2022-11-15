@@ -23,3 +23,5 @@ docoker-compose up -d
 ```
 yarn start:dev
  ```
+
+6. Ejecutar la ```mutacion: executeSeed```, para llenar la base de datos con informacion

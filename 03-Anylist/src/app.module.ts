@@ -1,17 +1,18 @@
-import { ApolloDriver, ApolloDriverConfig }          from '@nestjs/apollo'
-import { Module }                                    from '@nestjs/common'
-import { ConfigModule }                              from '@nestjs/config'
-import { GraphQLModule }                             from '@nestjs/graphql'
-import { JwtService }                                from '@nestjs/jwt'
-import { TypeOrmModule }                             from '@nestjs/typeorm'
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { GraphQLModule } from '@nestjs/graphql'
+import { JwtService } from '@nestjs/jwt'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core'
-import { join }                                      from 'path'
-import { AuthModule }                                from './auth/auth.module'
-import { ItemsModule }                               from './items/items.module'
-import { UsersModule }                               from './users/users.module'
+import { join } from 'path'
+import { AuthModule } from './auth/auth.module'
+import { ItemsModule } from './items/items.module'
+import { SeedModule } from './seed/seed.module'
+import { UsersModule } from './users/users.module'
 
 @Module( {
-	imports    : [
+	imports: [
 		ConfigModule.forRoot(),
 		GraphQLModule.forRootAsync<ApolloDriverConfig>( {
 			driver    : ApolloDriver,
@@ -45,7 +46,8 @@ import { UsersModule }                               from './users/users.module'
 		} ),
 		ItemsModule,
 		UsersModule,
-		AuthModule
+		AuthModule,
+		SeedModule
 	],
 	controllers: [],
 	providers  : []
