@@ -1,6 +1,6 @@
 import { ValidationPipe } from '@nestjs/common'
-import { NestFactory }    from '@nestjs/core'
-import { AppModule }      from './app.module'
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from './app.module'
 
 const PORT = 3000
 
@@ -9,8 +9,8 @@ async function bootstrap() {
 
 	app.useGlobalPipes(
 		new ValidationPipe( {
-			whitelist           : true,
-			forbidNonWhitelisted: true
+			whitelist: true
+//			forbidNonWhitelisted: true
 		} )
 	)
 

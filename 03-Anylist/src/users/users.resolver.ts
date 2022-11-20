@@ -1,7 +1,10 @@
-import { ParseUUIDPipe } from '@nestjs/common'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
 import { Args, ID, Int, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql'
 import { CurrentUser } from '../auth/decorators/current-user.decorator'
 import { ValidRoles } from '../auth/enums/valid-roles.enum'
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { PaginationArgs, SearchArgs } from '../common/dto/args'
+import { Item } from '../items/entities/item.entity'
 import { ItemsService } from '../items/items.service'
 import { ValidRolesArg } from './dto/args/validRolesArg'
 import { UpdateUserInput } from './dto/inputs/update-user.input'
@@ -9,7 +12,7 @@ import { User } from './entities/user.entity'
 import { UsersService } from './users.service'
 
 @Resolver( () => User )
-//@UseGuards( JwtAuthGuard )
+@UseGuards( JwtAuthGuard )
 export class UsersResolver {
 	constructor(
 		private readonly usersService: UsersService,
@@ -19,7 +22,7 @@ export class UsersResolver {
 	@Query( () => [ User ], { name: 'users' } )
 	public async findAll(
 		@Args() validRoles: ValidRolesArg,
-//		@CurrentUser( [ ValidRoles.ADMIN, ValidRoles.SUPER_USER ] ) user: User
+		@CurrentUser( [ ValidRoles.ADMIN, ValidRoles.SUPER_USER ] ) user: User
 	): Promise<User[]> {
 		return await this.usersService.findAll( validRoles.roles )
 	}
@@ -51,8 +54,18 @@ export class UsersResolver {
 	@ResolveField( () => Int )
 	public async itemCount(
 		@Parent() user: User,
-//		@CurrentUser( [ ValidRoles.ADMIN, ValidRoles.SUPER_USER ] ) currentUser: User
+		@CurrentUser( [ ValidRoles.ADMIN, ValidRoles.SUPER_USER ] ) currentUser: User
 	): Promise<number> {
 		return this.itemsService.itemCountByUser( user )
+	}
+
+	@ResolveField( () => [ Item ], { name: 'items' } )
+	public async getItemsByUser(
+		@Parent() user: User,
+		@CurrentUser( [ ValidRoles.ADMIN, ValidRoles.SUPER_USER ] ) currentUser: User,
+		@Args() paginationArgs: PaginationArgs,
+		@Args() searchArgs: SearchArgs
+	): Promise<Item[]> {
+		return this.itemsService.findAll( user, paginationArgs, searchArgs )
 	}
 }
