@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Item } from '../items/entities/item.entity'
 import { ItemsService } from '../items/items.service'
+import { ListItem } from '../list-item/entities/list-item.entity'
+import { List } from '../lists/entities/list.entity'
 import { User } from '../users/entities/user.entity'
 import { UsersService } from '../users/users.service'
 import { SEED_ITEMS, SEED_USERS } from './data/seed-data'
@@ -17,7 +19,11 @@ export class SeedService {
 		@InjectRepository( Item )
 		private readonly itemRepository: Repository<Item>,
 		@InjectRepository( User )
-		private readonly usersRepository: Repository<User>,
+		private readonly userRepository: Repository<User>,
+		@InjectRepository( List )
+		private readonly listRepository: Repository<List>,
+		@InjectRepository( ListItem )
+		private readonly listItemRepository: Repository<ListItem>,
 		private readonly usersService: UsersService,
 		private readonly itemService: ItemsService
 	) {
@@ -34,12 +40,22 @@ export class SeedService {
 	}
 
 	private async deleteDatabase(): Promise<any> {
+		await this.listItemRepository.createQueryBuilder()
+			.delete()
+			.andWhere( {} )
+			.execute()
+
+		await this.listRepository.createQueryBuilder()
+			.delete()
+			.andWhere( {} )
+			.execute()
+
 		await this.itemRepository.createQueryBuilder()
 			.delete()
 			.andWhere( {} )
 			.execute()
 
-		await this.usersRepository.createQueryBuilder()
+		await this.userRepository.createQueryBuilder()
 			.delete()
 			.andWhere( {} )
 			.execute()
